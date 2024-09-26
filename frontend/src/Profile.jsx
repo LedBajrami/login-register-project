@@ -15,7 +15,7 @@ function UserProfile() {
   useEffect(() => {
    const fetchUserData = async () => {
     try {
-      const response = await fetch(`${process.env.BASE_URL}/web/profile`)
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/web/profile`)
       if (response.ok) {
         const data = await response.json()
         setUser({

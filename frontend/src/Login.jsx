@@ -9,7 +9,7 @@ function Login() {
 
   const handleSubmit = async () => {
 
-    const response = await fetch(`${process.env.BASE_URL}/web/login`, {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/web/login`, {
      method: "POST",
      headers: {
       'Content-Type': "application/json"
