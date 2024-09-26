@@ -10,7 +10,7 @@ function Register() {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    const response = await fetch('http://localhost:8000/web/register', {
+    const response = await fetch(`${process.env.BASE_URL}/web/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
