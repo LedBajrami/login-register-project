@@ -15,14 +15,17 @@ function UserProfile() {
   useEffect(() => {
    const fetchUserData = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/web/profile`)
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/profile`)
+      const data = await response.json()
+      console.log(data)
       if (response.ok) {
-        const data = await response.json()
+       
         setUser({
           name: data.name,
           email: data.email,
           profilePhoto: data.profilePhoto || null
         })
+        console.log(data.name)
       } else {
         navigate("/")
         console.error('Failed to fetch user data');
@@ -33,7 +36,7 @@ function UserProfile() {
    }
 
    fetchUserData()
-  }, []);
+  }, [navigate]);
 
   const handlePhotoUpload = () => {
     // logic to handle photo uploads
@@ -43,7 +46,7 @@ function UserProfile() {
     <div style={{ width: '400px', marginInline: 'auto', paddingTop: '50px' }}>
       <h2>User Profile</h2>
       <div>
-        <strong>Name:</strong> {user.name}
+        <strong>Name:</strong> {user.name} 
       </div>
       <div>
         <strong>Email:</strong> {user.email}

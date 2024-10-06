@@ -10,7 +10,7 @@ function Register() {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/web/register`, {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

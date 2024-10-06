@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 return [
 
     /*
@@ -14,6 +17,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -117,6 +121,8 @@ return [
     | Supported drivers: "file", "cache"
     |
     */
+
+
 
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
