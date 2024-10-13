@@ -9,25 +9,28 @@ function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-
     const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/login`, {
-     method: "POST",
-     headers: {
-      'Content-Type': "application/json"
-     },
-     body: JSON.stringify({
-      email,
-      password
-     })
-    })
-
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+  
     const data = await response.json();
-
+  
     if (response.ok) {
-      navigate('/profile'); 
+      // Store the token in localStorage
+      localStorage.setItem('access_token', data.token);
+  
+      // Navigate to the profile page
+      navigate('/profile');
     } else {
-      setMessage("Wrong credentials, please try again")
-      console.error(data.mesasge)
+      setMessage('Wrong credentials, please try again');
+      console.error(data.message);
     }
   };
   

@@ -13,34 +13,75 @@ function UserProfile() {
   const navigate = useNavigate()
 
   useEffect(() => {
-   const fetchUserData = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/profile`)
-      const data = await response.json()
-      console.log(data)
-      if (response.ok) {
-       
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+    
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/profile`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',  // Use 'include' if cookies are needed, otherwise use 'same-origin'
+        });
+    
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+    
+        const data = await response.json();
         setUser({
           name: data.name,
           email: data.email,
-          profilePhoto: data.profilePhoto || null
-        })
-        console.log(data.name)
-      } else {
-        navigate("/")
-        console.error('Failed to fetch user data');
+          profilePhoto: data.profile_photo || null,
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
       }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
     }
-   }
-
-   fetchUserData()
+  
+    fetchUserData();
   }, [navigate]);
 
-  const handlePhotoUpload = () => {
-    // logic to handle photo uploads
+  const handlePhotoUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('photo', file); // Append the file to form data
+  
+    try {
+      const token = localStorage.getItem('access_token'); // Get the token from local storage
+  
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/upload-photo`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Send the token in the Authorization header
+        },
+        body: formData, // Use FormData for file uploads
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Update profile photo in the state
+        setUser((prevUser) => ({
+          ...prevUser,
+          profilePhoto: data.path, // Update profile photo URL from the backend response
+        }));
+  
+        console.log('Photo uploaded successfully');
+      } else {
+        console.error('Failed to upload photo:', data.error);
+      }
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+    }
   };
+
+  const beforeUpload = (file) => {
+    handlePhotoUpload(file);
+    return false; // Prevent Ant Design's default upload behavior
+  };
+  
 
   return (
     <div style={{ width: '400px', marginInline: 'auto', paddingTop: '50px' }}>
@@ -59,18 +100,16 @@ function UserProfile() {
         ) : (
           <img src="path/to/default/photo.jpg" alt="Default Profile" style={{ width: '100%' }} />
         )}
-      </div>
+  </div>
 
-      <Upload
-        name="profile_photo"
-        action=""// upload photo endpoint, still not created
-        onChange={handlePhotoUpload}
-        showUploadList={false}
-      >
-        <button>
-          Upload Photo
-        </button>
-      </Upload>
+
+  <Upload
+      name="profile_photo"
+      beforeUpload={beforeUpload}
+      showUploadList={false}
+    >
+    <button>Upload Photo</button>
+</Upload>
       <div>
         <p><Link to="/">Logout</Link></p>
       </div>
